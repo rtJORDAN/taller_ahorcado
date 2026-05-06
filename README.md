@@ -10,7 +10,7 @@ Las palabras del juego se cargan desde un archivo **CSV**, organizadas por categ
 El objetivo del taller es aplicar conceptos fundamentales de programación como:
 
 - Manejo de Strings
-- Uso de métodos (funciones)
+- Uso de métodos (funciones))
 - Lectura de archivos (CSV)
 - Arreglos y matrices
 - Control de flujo
