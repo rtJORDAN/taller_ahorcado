@@ -1,0 +1,51 @@
+categoria,palabra,pista
+ANIMALES,elefante,mamifero grande con trompa
+ANIMALES,leon,animal conocido como rey de la selva
+ANIMALES,tigre,felino salvaje con rayas
+ANIMALES,jirafa,animal alto con cuello largo
+ANIMALES,delfin,animal marino inteligente
+ANIMALES,cocodrilo,reptil que vive cerca del agua
+ANIMALES,aguila,ave cazadora de gran vista
+ANIMALES,pinguino,ave que no vuela y vive en zonas frias
+ANIMALES,tortuga,reptil con caparazon
+ANIMALES,caballo,animal usado para montar
+TECNOLOGIA,computador,maquina para procesar informacion
+TECNOLOGIA,teclado,dispositivo para escribir
+TECNOLOGIA,monitor,pantalla de un computador
+TECNOLOGIA,internet,red mundial de comunicacion
+TECNOLOGIA,software,programas de un sistema
+TECNOLOGIA,hardware,partes fisicas del computador
+TECNOLOGIA,robot,maquina programable
+TECNOLOGIA,celular,dispositivo movil de comunicacion
+TECNOLOGIA,algoritmo,conjunto de pasos para resolver un problema
+TECNOLOGIA,servidor,equipo que ofrece servicios en red
+PAISES,colombia,pais suramericano
+PAISES,mexico,pais ubicado en norteamerica
+PAISES,brasil,pais mas grande de suramerica
+PAISES,argentina,pais famoso por el tango
+PAISES,canada,pais con hoja de arce en su bandera
+PAISES,japon,pais asiatico conocido por su tecnologia
+PAISES,francia,pais europeo con la torre eiffel
+PAISES,italia,pais europeo famoso por la pizza
+PAISES,egipto,pais africano con piramides
+PAISES,australia,pais y continente
+COLOMBIA,arepa,comida tradicional colombiana
+COLOMBIA,cumbia,genero musical colombiano
+COLOMBIA,cafe,producto representativo de colombia
+COLOMBIA,bogota,capital de colombia
+COLOMBIA,medellin,ciudad conocida como la ciudad de la eterna primavera
+COLOMBIA,cartagena,ciudad costera historica
+COLOMBIA,shakira,cantante colombiana reconocida
+COLOMBIA,tejo,deporte tradicional colombiano
+COLOMBIA,guatape,pueblo famoso por su piedra
+COLOMBIA,amazonas,region natural del sur de colombia
+PROGRAMACION,java,lenguaje de programacion usado en el taller
+PROGRAMACION,variable,espacio para guardar datos
+PROGRAMACION,metodo,bloque de codigo que realiza una tarea
+PROGRAMACION,clase,plantilla para crear objetos
+PROGRAMACION,objeto,instancia de una clase
+PROGRAMACION,arreglo,estructura que guarda varios datos
+PROGRAMACION,string,cadena de texto
+PROGRAMACION,boolean,tipo de dato verdadero o falso
+PROGRAMACION,ciclo,estructura que repite instrucciones
+PROGRAMACION,condicional,estructura que permite tomar decisiones
