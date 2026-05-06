@@ -1,5 +1,5 @@
 # taller_ahorcado
-taller número 5 de lógica de programación
+taller número 5 de lógica de programación.
 
 ## 📌 Descripción del Proyecto
 
