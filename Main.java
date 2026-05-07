@@ -1,17 +1,19 @@
+import java.util.ArrayList;
+
 public class Main {
+
+    static ArrayList<String[]> palabras = CargadorCSV.cargarPalabras();
+    static int victorias = 0;
 
     public static void main(String[] args) {
 
         int opcion = 0;
 
         while (opcion != 4) {
-
             mostrarMenu();
-
             opcion = ConsoleInput.leerEntero("Seleccione una opción: ");
 
             switch (opcion) {
-
                 case 1:
                     jugar();
                     break;
@@ -25,56 +27,86 @@ public class Main {
                     break;
 
                 case 4:
-                    System.out.println("\nGracias por jugar. Hasta luego.");
+                    System.out.println("\nGracias por jugar.");
                     break;
 
                 default:
-                    System.out.println("\nOpción inválida. Debe elegir entre 1 y 4.");
-                    break;
+                    System.out.println("\nOpción inválida.");
+                    System.out.println("Debes ingresar un número entre 1 y 4.");
             }
         }
     }
 
     public static void mostrarMenu() {
-
-        System.out.println("\n╔══════════════════════════════════════╗");
-        System.out.println("║              AHORCADO                ║");
-        System.out.println("╠══════════════════════════════════════╣");
-        System.out.println("║  1. Jugar                            ║");
-        System.out.println("║  2. Ver instrucciones                ║");
-        System.out.println("║  3. Tabla de récords                 ║");
-        System.out.println("║  4. Salir                            ║");
-        System.out.println("╚══════════════════════════════════════╝");
+        System.out.println("\n╔════════════════════════════╗");
+        System.out.println("║          AHORCADO          ║");
+        System.out.println("╠════════════════════════════╣");
+        System.out.println("║  1. Jugar                  ║");
+        System.out.println("║  2. Ver instrucciones      ║");
+        System.out.println("║  3. Tabla de récords       ║");
+        System.out.println("║  4. Salir                  ║");
+        System.out.println("╚════════════════════════════╝");
     }
 
     public static void jugar() {
 
-        System.out.println("\nIniciando juego...");
+        if (palabras.size() == 0) {
+            System.out.println("No se cargaron palabras desde el CSV.");
+            return;
+        }
 
-        // Por ahora se prueba con una palabra fija
-        Juego.jugar("elefante", "Mamífero grande con trompa");
+        String[] categorias = {
+            "ANIMALES",
+            "TECNOLOGIA",
+            "PAISES",
+            "COLOMBIA",
+            "PROGRAMACION"
+        };
+
+        System.out.println("\n╔════════════════════════════╗");
+        System.out.println("║        CATEGORÍAS          ║");
+        System.out.println("╠════════════════════════════╣");
+
+        for (int i = 0; i < categorias.length; i++) {
+            System.out.println("║  " + (i + 1) + ". " + categorias[i]);
+        }
+
+        System.out.println("╚════════════════════════════╝");
+
+        int opcion = ConsoleInput.leerEntero("Seleccione categoría: ");
+
+        if (opcion < 1 || opcion > categorias.length) {
+            System.out.println("Categoría inválida. Debes elegir entre 1 y " + categorias.length + ".");
+            return;
+        }
+
+        String categoria = categorias[opcion - 1];
+
+        boolean gano = Juego.jugar(palabras, categoria);
+
+        if (gano) {
+            victorias++;
+        }
     }
 
     public static void mostrarInstrucciones() {
-
-        System.out.println("\n╔══════════════════════════════════════╗");
-        System.out.println("║             INSTRUCCIONES            ║");
-        System.out.println("╚══════════════════════════════════════╝");
-
-        System.out.println("- Debes adivinar la palabra oculta.");
-        System.out.println("- Ingresa una letra por turno.");
-        System.out.println("- Si la letra está en la palabra, se mostrará.");
-        System.out.println("- Si la letra no está, se suma un error.");
+        System.out.println("\n╔════════════════════════════════════════╗");
+        System.out.println("║              INSTRUCCIONES             ║");
+        System.out.println("╚════════════════════════════════════════╝");
+        System.out.println("- Escribe tu nombre antes de jugar.");
+        System.out.println("- Si escribes XACARANA, activas el Modo Dios.");
+        System.out.println("- Selecciona una categoría.");
+        System.out.println("- Adivina la palabra letra por letra.");
+        System.out.println("- También puedes escribir la palabra completa.");
+        System.out.println("- Escribe '-' para pedir pista.");
+        System.out.println("- Pedir pista cuesta 1 error.");
         System.out.println("- Pierdes al llegar a 6 errores.");
-        System.out.println("- Ganas si completas la palabra.");
     }
 
     public static void mostrarRecords() {
-
-        System.out.println("\n╔══════════════════════════════════════╗");
-        System.out.println("║            TABLA DE RÉCORDS          ║");
-        System.out.println("╚══════════════════════════════════════╝");
-
-        System.out.println("Aún no hay récords registrados.");
+        System.out.println("\n╔════════════════════════════╗");
+        System.out.println("║          RÉCORDS           ║");
+        System.out.println("╚════════════════════════════╝");
+        System.out.println("Victorias en esta sesión: " + victorias);
     }
 }

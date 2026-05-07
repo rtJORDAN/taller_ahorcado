@@ -8,10 +8,17 @@ public class ConsoleInput {
         while (true) {
             try {
                 System.out.print(mensaje);
-                int numero = Integer.parseInt(sc.nextLine());
-                return numero;
+                String entrada = sc.nextLine();
+
+                if (entrada.trim().isEmpty()) {
+                    System.out.println("No puedes dejar el campo vacío.");
+                    continue;
+                }
+
+                return Integer.parseInt(entrada);
+
             } catch (Exception e) {
-                System.out.println("Entrada inválida. Debe ingresar un número.");
+                System.out.println("Entrada inválida. Debes ingresar solo números.");
             }
         }
     }

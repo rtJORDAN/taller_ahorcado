@@ -1,21 +1,30 @@
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Juego {
 
-    public static void jugar(String palabra, String pista) {
+    public static boolean jugar(ArrayList<String[]> palabras, String categoria) {
 
-        Scanner sc = new Scanner(System.in);
+        String nombre = ConsoleInput.leerTexto("\nIngrese su nombre: ");
 
-        System.out.print("Ingrese su nombre: ");
-        String nombre = sc.nextLine();
-
-        boolean modoEspecial = verificarEasterEgg(nombre);
-
-        if (modoEspecial) {
-            mostrarEasterEgg();
+        if (nombre.trim().isEmpty()) {
+            nombre = "Jugador";
         }
 
-        palabra = palabra.toLowerCase();
+        boolean modoDios = nombre.trim().equalsIgnoreCase("XACARANA");
+
+        String[] seleccion = seleccionarPalabraAleatoria(palabras, categoria);
+
+        if (seleccion == null) {
+            System.out.println("No hay palabras disponibles en esta categoría.");
+            return false;
+        }
+
+        String palabra = seleccion[1].trim().toUpperCase();
+        String pista = seleccion[2].trim();
+
+        int errores = 0;
+        boolean pistaUsada = false;
+        String letrasUsadas = "";
 
         char[] estado = new char[palabra.length()];
 
@@ -23,35 +32,90 @@ public class Juego {
             estado[i] = '_';
         }
 
-        if (modoEspecial) {
-            estado[0] = palabra.charAt(0);
-            System.out.println("Bonus activado: se reveló la primera letra.");
+        if (modoDios) {
+            mostrarModoDios();
+
+            if (palabra.length() > 0) {
+                validarLetra(palabra.charAt(0), palabra, estado);
+            }
         }
 
-        int errores = 0;
-        int maxErrores = 6;
+        while (errores < 6 && !estaCompleta(estado)) {
 
-        while (errores < maxErrores && !estaCompleta(estado)) {
+            limpiarPantalla();
+
+            System.out.println("╔════════════════════════════════════╗");
+            System.out.println("║             AHORCADO               ║");
+            System.out.println("╠════════════════════════════════════╣");
+            System.out.println("║ Jugador: " + nombre);
+            System.out.println("║ Categoría: " + categoria);
+
+            if (modoDios) {
+                System.out.println("║ Modo: DIOS ACTIVADO");
+}
+            System.out.println("╚════════════════════════════════════╝");
 
             mostrarAhorcado(errores);
             mostrarPalabra(estado);
 
-            System.out.println("Pista: " + pista);
-            System.out.print("Ingrese una letra: ");
+            System.out.println("\nLetras usadas: " + letrasUsadas);
 
-            String entrada = sc.nextLine().toLowerCase();
+            if (pistaUsada) {
+                System.out.println("Pista: " + pista);
+            } else {
+                System.out.println("Para pedir pista escribe: -");
+            }
 
-            if (entrada.length() != 1) {
-                System.out.println("Debe ingresar solo una letra.");
+            System.out.println("Puedes ingresar una letra o la palabra completa.");
+
+            String entrada = ConsoleInput.leerTexto("Ingrese letra o palabra: ");
+            entrada = entrada.trim().toUpperCase();
+
+            if (entrada.equals("-")) {
+                if (!pistaUsada) {
+                    System.out.println("\nPISTA: " + pista);
+                    pistaUsada = true;
+                    errores++;
+                } else {
+                    System.out.println("\nYa usaste la pista.");
+                }
+                continue;
+            }
+
+            if (entrada.length() == 0) {
+                System.out.println("No puedes dejar el campo vacío.");
+                continue;
+            }
+
+            if (!soloLetras(entrada)) {
+                System.out.println("Entrada inválida.");
+                System.out.println("- Solo puedes ingresar letras.");
+                System.out.println("- Para pedir pista usa únicamente el símbolo '-'.");
+                System.out.println("- No uses números ni caracteres especiales.");
+                continue;
+            }
+
+            if (entrada.length() > 1) {
+                if (entrada.equals(palabra)) {
+                    for (int i = 0; i < palabra.length(); i++) {
+                        estado[i] = palabra.charAt(i);
+                    }
+                    System.out.println("¡Correcto! Adivinaste la palabra completa.");
+                } else {
+                    System.out.println("Palabra incorrecta.");
+                    errores++;
+                }
                 continue;
             }
 
             char letra = entrada.charAt(0);
 
-            if (!Character.isLetter(letra)) {
-                System.out.println("Debe ingresar una letra válida.");
+            if (letrasUsadas.indexOf(letra) != -1) {
+                System.out.println("Ya usaste esa letra. Intenta con otra.");
                 continue;
             }
+
+            letrasUsadas = letrasUsadas + letra + " ";
 
             boolean acierto = validarLetra(letra, palabra, estado);
 
@@ -63,91 +127,56 @@ public class Juego {
             }
         }
 
+        limpiarPantalla();
+        mostrarAhorcado(errores);
+
         if (estaCompleta(estado)) {
-            System.out.println("\n¡Ganaste!");
+            System.out.println("\n╔════════════════════════════╗");
+            System.out.println("║          ¡GANASTE!         ║");
+            System.out.println("╚════════════════════════════╝");
+            System.out.println("Jugador: " + nombre);
+            System.out.println("Categoría: " + categoria);
             System.out.println("La palabra era: " + palabra);
+            return true;
         } else {
-            mostrarAhorcado(errores);
-            System.out.println("\nPerdiste.");
+            System.out.println("\n╔════════════════════════════╗");
+            System.out.println("║          PERDISTE          ║");
+            System.out.println("╚════════════════════════════╝");
+            System.out.println("Jugador: " + nombre);
+            System.out.println("Categoría: " + categoria);
             System.out.println("La palabra era: " + palabra);
+            return false;
         }
     }
 
-    public static boolean verificarEasterEgg(String nombre) {
-        return nombre.equalsIgnoreCase("XACARANA");
-    }
+    public static String[] seleccionarPalabraAleatoria(ArrayList<String[]> palabras, String categoria) {
+        ArrayList<String[]> filtradas = new ArrayList<>();
 
-    public static void mostrarEasterEgg() {
-        System.out.println("\n╔══════════════════════════════════════╗");
-        System.out.println("║        MODO XACARANA ACTIVADO        ║");
-        System.out.println("╠══════════════════════════════════════╣");
-        System.out.println("║     Has desbloqueado un bonus        ║");
-        System.out.println("║     Se revelará la primera letra     ║");
-        System.out.println("╚══════════════════════════════════════╝");
-    }
-
-    public static void mostrarAhorcado(int errores) {
-
-        System.out.println("\n======= AHORCADO =======");
-        System.out.println("Errores: " + errores + "/6");
-
-        if (errores == 0) {
-            System.out.println("  +---+");
-            System.out.println("  |   |");
-            System.out.println("      |");
-            System.out.println("      |");
-            System.out.println("      |");
-            System.out.println("      |");
-            System.out.println("=========");
-        } else if (errores == 1) {
-            System.out.println("  +---+");
-            System.out.println("  |   |");
-            System.out.println("  O   |");
-            System.out.println("      |");
-            System.out.println("      |");
-            System.out.println("      |");
-            System.out.println("=========");
-        } else if (errores == 2) {
-            System.out.println("  +---+");
-            System.out.println("  |   |");
-            System.out.println("  O   |");
-            System.out.println("  |   |");
-            System.out.println("      |");
-            System.out.println("      |");
-            System.out.println("=========");
-        } else if (errores == 3) {
-            System.out.println("  +---+");
-            System.out.println("  |   |");
-            System.out.println("  O   |");
-            System.out.println(" /|   |");
-            System.out.println("      |");
-            System.out.println("      |");
-            System.out.println("=========");
-        } else if (errores == 4) {
-            System.out.println("  +---+");
-            System.out.println("  |   |");
-            System.out.println("  O   |");
-            System.out.println(" /|\\  |");
-            System.out.println("      |");
-            System.out.println("      |");
-            System.out.println("=========");
-        } else if (errores == 5) {
-            System.out.println("  +---+");
-            System.out.println("  |   |");
-            System.out.println("  O   |");
-            System.out.println(" /|\\  |");
-            System.out.println(" /    |");
-            System.out.println("      |");
-            System.out.println("=========");
-        } else {
-            System.out.println("  +---+");
-            System.out.println("  |   |");
-            System.out.println("  O   |");
-            System.out.println(" /|\\  |");
-            System.out.println(" / \\  |");
-            System.out.println("      |");
-            System.out.println("=========");
+        for (String[] fila : palabras) {
+            if (fila[0].trim().equalsIgnoreCase(categoria)) {
+                filtradas.add(fila);
+            }
         }
+
+        if (filtradas.size() == 0) {
+            return null;
+        }
+
+        int posicion = (int)(Math.random() * filtradas.size());
+        return filtradas.get(posicion);
+    }
+
+    public static boolean validarLetra(char letra, String palabra, char[] estado) {
+        boolean encontrada = false;
+
+        for (int i = 0; i < palabra.length(); i++) {
+            if (palabra.charAt(i) == letra) {
+                estado[i] = letra;
+                encontrada = true;
+            }
+        }
+
+        return encontrada;
     }
 
     public static void mostrarPalabra(char[] estado) {
@@ -160,22 +189,7 @@ public class Juego {
         System.out.println();
     }
 
-    public static boolean validarLetra(char letra, String palabra, char[] estado) {
-
-        boolean acierto = false;
-
-        for (int i = 0; i < palabra.length(); i++) {
-            if (palabra.charAt(i) == letra) {
-                estado[i] = letra;
-                acierto = true;
-            }
-        }
-
-        return acierto;
-    }
-
     public static boolean estaCompleta(char[] estado) {
-
         for (int i = 0; i < estado.length; i++) {
             if (estado[i] == '_') {
                 return false;
@@ -185,8 +199,49 @@ public class Juego {
         return true;
     }
 
-    public static String seleccionarPalabraAleatoria(String[] palabras) {
-        int posicion = (int)(Math.random() * palabras.length);
-        return palabras[posicion];
+    public static boolean soloLetras(String texto) {
+        for (int i = 0; i < texto.length(); i++) {
+            if (!Character.isLetter(texto.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
     }
-}
+
+    public static void mostrarModoDios() {
+        System.out.println("\n╔══════════════════════════════════════╗");
+        System.out.println("║        MODO DIOS ACTIVADO            ║");
+        System.out.println("╠══════════════════════════════════════╣");
+        System.out.println("║  Código secreto: XACARANA            ║");
+        System.out.println("║  Se reveló la primera letra          ║");
+        System.out.println("╚══════════════════════════════════════╝");
+    }
+
+    public static void mostrarAhorcado(int errores) {
+        String cabeza = (errores >= 1) ? "O" : " ";
+        String cuerpo = (errores >= 2) ? "|" : " ";
+        String brazoIzq = (errores >= 3) ? "/" : " ";
+        String brazoDer = (errores >= 4) ? "\\" : " ";
+        String piernaIzq = (errores >= 5) ? "/" : " ";
+        String piernaDer = (errores >= 6) ? "\\" : " ";
+
+        System.out.println("\n╔════════════════════╗");
+        System.out.println("║      AHORCADO      ║");
+        System.out.println("╠════════════════════╣");
+        System.out.println("║ Errores: " + errores + "/6        ║");
+        System.out.println("╠════════════════════╣");
+        System.out.println("║        ┌─────┐     ║");
+        System.out.println("║        │     │     ║");
+        System.out.println("║        " + cabeza + "     │     ║");
+        System.out.println("║       " + brazoIzq + cuerpo + brazoDer + "    │     ║");
+        System.out.println("║       " + piernaIzq + " " + piernaDer + "    │     ║");
+        System.out.println("║              │     ║");
+        System.out.println("║     ═══════════    ║");
+        System.out.println("╚════════════════════╝");
+    }
+
+    public static void limpiarPantalla() {
+    System.out.println("\n\n");
+        }
+    }
