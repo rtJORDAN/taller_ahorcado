@@ -14,7 +14,7 @@ El objetivo del taller es aplicar conceptos fundamentales de programación como:
 - Lectura de archivos (CSV)
 - Arreglos y matrices
 - Control de flujo
-- Modularización del códig
+- Modularización del código
 
 ---
 
