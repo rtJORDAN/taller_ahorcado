@@ -7,7 +7,7 @@ Este proyecto consiste en el desarrollo del juego clásico **Ahorcado** utilizan
 
 Las palabras del juego se cargan desde un archivo **CSV**, organizadas por categorías, permitiendo que el sistema sea dinámico, escalable y fácil de mantener.
 
-El objetivo del taller es aplicar conceptos fundamentales de programación como
+El objetivo del taller es aplicar conceptos fundamentales de programación como:
 
 - Manejo de Strings
 - Uso de métodos (funciones)
